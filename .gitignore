@@ -1,0 +1,6 @@
+# videos are hosted on a media service (too big for GitHub)
+*.mp4
+*.mov
+*.webm
+.DS_Store
+_shot.html

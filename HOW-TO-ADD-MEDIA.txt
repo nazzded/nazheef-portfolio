@@ -1,0 +1,13 @@
+HOW TO ADD YOUR PHOTOS, VIDEOS AND EDITS
+=========================================
+Drop files into these folders using EXACTLY these names.
+Every slot resizes itself to the real shape of your file, so nothing gets cropped.
+
+assets/editing/       edit-01.mp4 ... edit-07.mp4
+assets/photography/   photo-01.jpg ... photo-05.jpg
+assets/videography/   afronoons.mp4 (big letterbox film)  redbull.mp4  step-it-up.mp4
+
+Photos: export around 2400px on the long side (JPG, quality ~80) so the page loads fast.
+Videos: H.264 .mp4, 1080p. Big files (100 MB+) will load slowly online, so compress before uploading.
+
+Also edit in index.html: email, phone, social links.
