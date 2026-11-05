@@ -605,10 +605,10 @@ a{color:inherit;text-decoration:none}
   const isVideo = src => /\.(mp4|webm|mov|m4v)$/i.test(src);
 
   /* ---------- Where media is loaded from ----------
-     Empty = the local assets/ folder. Videos are not in git (too big), so online
-     they load from a media host. Upload them keeping the same paths, then set e.g.
-     VIDEO_HOST = 'https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/q_auto/'  */
-  const VIDEO_HOST = '';
+     Opened from your computer (file://) = the local assets/ folder.
+     Online = Cloudinary, uploaded with the same paths (assets/editing/edit-01 …).
+     No transformations in the URL, so the original files are served at full quality.  */
+  const VIDEO_HOST = location.protocol === 'file:' ? '' : 'https://res.cloudinary.com/idbior9q/video/upload/';
   const IMAGE_HOST = '';
   const mediaURL = src => (isVideo(src) ? VIDEO_HOST : IMAGE_HOST) + src;
 
