@@ -153,6 +153,17 @@ a{color:inherit;text-decoration:none}
 .nav-cta i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rec);margin-right:9px;vertical-align:1px;box-shadow:0 0 8px var(--rec);animation:blink 1.2s steps(1) infinite}
 @keyframes blink{50%{opacity:.15}}
 @media (max-width:900px){.nav-links{display:none}}
+.nav-right{display:flex;align-items:center;gap:10px}
+.sound{display:flex;align-items:center;gap:10px;background:none;color:var(--ink);font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;padding:10px 16px;border:1px solid var(--line);border-radius:999px;transition:background .3s,color .3s,box-shadow .3s}
+.sound:hover{box-shadow:0 0 30px var(--glow)}
+.sound .bars{display:flex;align-items:flex-end;gap:2px;height:12px}
+.sound .bars i{display:block;width:2px;height:3px;background:currentColor;border-radius:1px;transition:height .3s}
+.sound.on .bars i{animation:eq .9s ease-in-out infinite}
+.sound.on .bars i:nth-child(2){animation-delay:-.3s}
+.sound.on .bars i:nth-child(3){animation-delay:-.6s}
+.sound.on .bars i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:3px}50%{height:12px}}
+@media (max-width:640px){.sound-l{display:none}.nav-cta{display:none}}
 
 /* =========================================================
    FOLD LAYOUT (identical on every fold)
@@ -420,8 +431,12 @@ a{color:inherit;text-decoration:none}
     <li><a href="#videography">Videography</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#contact" class="nav-cta"><i></i>Start a project</a>
+  <div class="nav-right">
+    <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Toggle sound"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-l">Sound off</span></button>
+    <a href="#contact" class="nav-cta"><i></i>Start a project</a>
+  </div>
 </header>
+<audio id="bgm" src="assets/audio/site-audio.m4a" loop preload="auto"></audio>
 
 <main id="top">
 
@@ -758,6 +773,48 @@ a{color:inherit;text-decoration:none}
   }), { threshold: .25 });
   slots.forEach(s => vidIO.observe(s));
 
+  /* ---------- Site audio ----------
+     Browsers only allow sound after a click / tap / key press, so the music
+     fades in on the visitor's first interaction (unless they turned it off before). */
+  const bgm = $('#bgm'), soundBtn = $('#sound'), soundLabel = $('.sound-l', soundBtn);
+  const VOLUME = .55;
+  let soundOn = false, ducked = false, fadeRAF = 0, wantSound = true;
+  try { wantSound = localStorage.getItem('nazzded-sound') !== 'off'; } catch (e) {}
+  function fadeTo(v, done) {
+    cancelAnimationFrame(fadeRAF);
+    const from = bgm.volume, t0 = performance.now();
+    const step = now => {
+      const k = Math.min(1, (now - t0) / 900);
+      bgm.volume = from + (v - from) * k;
+      if (k < 1) fadeRAF = requestAnimationFrame(step); else if (done) done();
+    };
+    fadeRAF = requestAnimationFrame(step);
+  }
+  function setSound(on, remember) {
+    soundOn = on;
+    soundBtn.classList.toggle('on', on);
+    soundBtn.setAttribute('aria-pressed', on);
+    soundLabel.textContent = on ? 'Sound on' : 'Sound off';
+    if (on) { bgm.volume = 0; bgm.play().then(() => fadeTo(VOLUME)).catch(() => setSound(false)); }
+    else fadeTo(0, () => bgm.pause());
+    if (remember) try { localStorage.setItem('nazzded-sound', on ? 'on' : 'off'); } catch (e) {}
+  }
+  function duck(down) {
+    if (!soundOn) return;
+    if (down && !ducked) { ducked = true; fadeTo(0, () => bgm.pause()); }
+    else if (!down && ducked) { ducked = false; bgm.play().then(() => fadeTo(VOLUME)).catch(() => {}); }
+  }
+  soundBtn.addEventListener('click', () => setSound(!soundOn, true));
+  const firstGesture = e => {
+    removeEventListener('pointerdown', firstGesture); removeEventListener('keydown', firstGesture);
+    if (wantSound && !soundOn && !soundBtn.contains(e.target)) setSound(true);
+  };
+  addEventListener('pointerdown', firstGesture); addEventListener('keydown', firstGesture);
+  document.addEventListener('visibilitychange', () => {
+    if (!soundOn || ducked) return;
+    document.hidden ? bgm.pause() : bgm.play().catch(() => {});
+  });
+
   /* ---------- Lightbox ---------- */
   const lb = $('#lightbox'), lbBody = $('#lbBody'), lbCap = $('#lbCap');
   function openLB(src, label) {
@@ -766,9 +823,10 @@ a{color:inherit;text-decoration:none}
     el.className = 'lb-media'; el.src = mediaURL(src);
     if (isVideo(src)) { el.controls = true; el.autoplay = true; el.playsInline = true; }
     lbBody.append(el); lbCap.textContent = label || '';
+    if (isVideo(src)) duck(true);
     lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false');
   }
-  function closeLB() { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); setTimeout(() => lbBody.innerHTML = '', 500); }
+  function closeLB() { duck(false); lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); setTimeout(() => lbBody.innerHTML = '', 500); }
   slots.forEach(s => s.addEventListener('click', () => { if (s.classList.contains('has-media')) openLB(s.dataset.src, s.dataset.label); }));
   $('#lbClose').addEventListener('click', closeLB);
   lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
