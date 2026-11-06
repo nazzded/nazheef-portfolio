@@ -154,31 +154,29 @@ a{color:inherit;text-decoration:none}
    ========================================================= */
 .loader{position:fixed;inset:0;z-index:200;background:#050505;display:grid;place-items:center;overflow:hidden;animation:loader-fallback 0s 8s forwards}
 @keyframes loader-fallback{to{visibility:hidden}}
-.loader::after{content:"";position:absolute;inset:-50%;pointer-events:none;opacity:.16;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 2 -.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain .5s steps(8) infinite}
-.loader.dissolving{filter:url(#fx-dissolve);pointer-events:none}
+.loader::after{content:"";position:absolute;inset:-50%;pointer-events:none;opacity:.16;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.45' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 2 -.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain .5s steps(8) infinite}
 .loader.gone{display:none}
-.loader-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:20px;animation:flicker 3.2s steps(1) infinite}
+.loader-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:18px;animation:flicker 3.2s steps(1) infinite;will-change:transform,filter,opacity}
 @keyframes flicker{0%,100%{opacity:1}31%{opacity:.84}33%{opacity:1}71%{opacity:.9}72%{opacity:1}}
-/* film-leader countdown */
-.leader{position:relative;width:min(58vw,280px);aspect-ratio:1;display:grid;place-items:center}
-.leader-ring{position:absolute;border-radius:50%;border:1px solid rgba(236,235,232,.55)}
-.leader-ring.r1{inset:0}
-.leader-ring.r2{inset:10%;border-color:rgba(236,235,232,.28)}
-.leader-cross{position:absolute;inset:-8%;background:linear-gradient(rgba(236,235,232,.32),rgba(236,235,232,.32)) center/1px 100% no-repeat,linear-gradient(rgba(236,235,232,.32),rgba(236,235,232,.32)) center/100% 1px no-repeat}
-.leader-sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(236,235,232,.2) var(--sw,0deg),transparent 0)}
-.leader-num{position:relative;font-size:clamp(96px,22vw,180px);line-height:1}
-.leader .logo3d{position:absolute;--size:46%;opacity:0;transition:opacity .6s}
-.loader.ready .leader .logo3d{opacity:1}
-.loader.ready .leader-num{opacity:0;transition:opacity .4s}
-.loader-meta{display:flex;gap:22px;justify-content:center}
-.enter{display:flex;flex-direction:column;align-items:center;gap:14px;min-height:96px;opacity:0;transform:translateY(12px);transition:opacity .7s var(--ease),transform .9s var(--ease);pointer-events:none}
+.loader-count{font-size:clamp(84px,15vw,180px);line-height:.9;font-variant-numeric:tabular-nums}
+.loader-bar{width:min(60vw,320px);height:2px;background:rgba(236,235,232,.12);overflow:hidden}
+.loader-bar i{display:block;height:100%;transform-origin:left;transform:scaleX(0);background:var(--ink);box-shadow:0 0 12px var(--glow)}
+.enter{display:flex;justify-content:center;min-height:84px;padding-top:6px;opacity:0;transform:translateY(12px);transition:opacity .7s var(--ease),transform .9s var(--ease);pointer-events:none}
 .loader.ready .enter{opacity:1;transform:none;pointer-events:auto}
 .enter-btn{display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:900;font-stretch:112%;font-size:clamp(28px,4vw,42px);letter-spacing:-.05em;text-transform:lowercase;color:#000;background:var(--ink);border:0;border-radius:999px;padding:12px 32px 14px;box-shadow:0 0 40px var(--glow),0 0 0 6px rgba(236,235,232,.07);transition:transform .45s var(--ease),box-shadow .45s}
 .enter-btn:hover,.enter-btn:focus-visible{transform:scale(1.05);box-shadow:0 0 80px var(--glow),0 0 0 10px rgba(236,235,232,.1);outline:none}
 .enter-btn small{font:500 10px var(--mono);letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 .enter-btn small::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--rec);box-shadow:0 0 8px var(--rec);animation:blink 1s steps(1) infinite}
-.enter-mute{background:none;border:0;color:var(--muted);font:500 10px var(--mono);letter-spacing:.2em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px}
-.enter-mute:hover{color:var(--ink)}
+/* motion-graphics transition: shape-layer bars, flash frame, word slam */
+.mg{position:fixed;inset:0;z-index:250;pointer-events:none;display:none;overflow:hidden}
+.mg.on{display:block}
+.mg-bar{position:absolute;left:0;width:100%;height:calc(100% / 7 + 1px);transform:scaleX(0);will-change:transform}
+.mg-bar{background:#0b0b0c}
+.mg-bar:nth-child(2),.mg-bar:nth-child(6){background:#e9e8e4}
+.mg-bar:nth-child(3),.mg-bar:nth-child(5){background:#8f96a0}
+.mg-bar::after{content:"";position:absolute;inset:0;opacity:.3;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.45' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 2 -.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.mg-word{position:absolute;left:50%;top:50%;font-size:clamp(70px,14vw,230px);color:#fff;transform:translate(-50%,-50%);opacity:0;white-space:nowrap}
+.mg-flash{position:absolute;inset:0;background:#fff;opacity:0}
 /* the page arrives out of focus and settles as the loader burns away */
 .hero-center{transition:opacity 1.4s var(--ease) .1s,filter 1.7s var(--ease) .1s,transform 2.2s var(--ease) .1s}
 .intro .hero-center{opacity:0;filter:blur(26px);transform:scale(1.14)}
@@ -441,16 +439,6 @@ a{color:inherit;text-decoration:none}
       <stop offset=".47" stop-color="#2c3037"/><stop offset=".56" stop-color="#7d8692"/>
       <stop offset=".78" stop-color="#ffffff"/><stop offset="1" stop-color="#9aa3ae"/>
     </linearGradient>
-    <!-- loader burn-through: a noise threshold eats the loader, leaving glowing edges -->
-    <filter id="fx-dissolve" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="4" seed="21" result="n"/>
-      <feColorMatrix id="dsvA" in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  14 0 0 0 -1.5" result="keep"/>
-      <feColorMatrix id="dsvB" in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  14 0 0 0 -.2" result="outer"/>
-      <feComposite in="outer" in2="keep" operator="out" result="edge"/>
-      <feGaussianBlur in="edge" stdDeviation="5" result="edgeGlow"/>
-      <feComposite in="SourceGraphic" in2="keep" operator="in" result="body"/>
-      <feMerge><feMergeNode in="body"/><feMergeNode in="edgeGlow"/><feMergeNode in="edge"/></feMerge>
-    </filter>
     <!-- liquid warp + deep glow (hero word) -->
     <filter id="fx-warp" x="-25%" y="-70%" width="150%" height="240%" color-interpolation-filters="sRGB">
       <feTurbulence id="warpTurb" type="fractalNoise" baseFrequency="0.005 0.011" numOctaves="2" seed="3" result="n"/>
@@ -541,19 +529,17 @@ a{color:inherit;text-decoration:none}
 
 <div class="loader" id="loader" role="dialog" aria-label="Loading">
   <div class="loader-inner">
-    <div class="leader" aria-hidden="true">
-      <div class="leader-sweep"></div>
-      <div class="leader-ring r1"></div><div class="leader-ring r2"></div>
-      <div class="leader-cross"></div>
-      <span class="leader-num ink" id="leaderNum">3</span>
-      <div class="logo3d" data-logo3d></div>
-    </div>
-    <div class="loader-meta meta"><span><b id="loadPct">000%</b></span><span>nazzded · reel 2026</span></div>
-    <div class="enter" id="enter">
-      <button class="enter-btn" id="enterSound" type="button">enter <small>sound on</small></button>
-      <button class="enter-mute" id="enterMute" type="button">enter muted</button>
-    </div>
+    <div class="logo3d" data-logo3d style="--size:150px"></div>
+    <div class="loader-count ink" id="loadPct">000</div>
+    <div class="loader-bar" aria-hidden="true"><i id="loadBar"></i></div>
+    <div class="meta" id="loadLabel">Rendering timeline</div>
+    <div class="enter"><button class="enter-btn" id="enterSound" type="button">enter <small>sound on</small></button></div>
   </div>
+</div>
+<div class="mg" id="mg" aria-hidden="true">
+  <i class="mg-bar"></i><i class="mg-bar"></i><i class="mg-bar"></i><i class="mg-bar"></i><i class="mg-bar"></i><i class="mg-bar"></i><i class="mg-bar"></i>
+  <span class="mg-word ink">nazzded</span>
+  <b class="mg-flash"></b>
 </div>
 
 <header class="nav" id="nav">
@@ -1000,12 +986,13 @@ a{color:inherit;text-decoration:none}
     document.hidden ? bgm.pause() : bgm.play().catch(() => {});
   });
 
-  /* ---------- Loader: film-leader countdown → enter (sound on) → ink burn-through ---------- */
-  const loader = $('#loader'), leaderNum = $('#leaderNum'), leaderEl = $('.leader'), loadPct = $('#loadPct');
-  const dsvA = $('#dsvA'), dsvB = $('#dsvB');
+  /* ---------- Loader: ink counter tied to real loading → enter (music on) → motion-graphics reveal ---------- */
+  const loader = $('#loader'), loaderInner = $('.loader-inner'), loadPct = $('#loadPct'), loadBar = $('#loadBar'), loadLabel = $('#loadLabel');
+  const enterBtn = $('#enterSound'), mg = $('#mg'), bars = $$('.mg-bar', mg), mgWord = $('.mg-word', mg), mgFlash = $('.mg-flash', mg);
   let loaderGone = false, revealing = false, introBoost = 0;
   loader.style.animation = 'none';               // JS is running: drop the no-JS safety timeout
   document.body.classList.add('intro');
+  bars.forEach((b, i) => { b.style.top = (i * 100 / 7) + '%'; });
   const capWait = (p, ms) => Promise.race([p, new Promise(r => setTimeout(r, ms))]);
   const jobs = [
     document.fonts ? document.fonts.ready : Promise.resolve(),
@@ -1014,42 +1001,65 @@ a{color:inherit;text-decoration:none}
   ];
   let loaded = 0;
   jobs.forEach(p => capWait(p, 7000).then(() => loaded++));
-  const COUNT = 3, STEP = 800, lt0 = performance.now();
+  const MIN_LOAD = 1800, lt0 = performance.now();
   let shownPct = 0;
-  requestAnimationFrame(function leaderTick(now) {
-    const el = now - lt0, n = Math.min(COUNT, Math.floor(el / STEP));
-    shownPct += (Math.min(loaded / jobs.length, el / (COUNT * STEP)) * 100 - shownPct) * .1;
-    loadPct.textContent = String(Math.round(shownPct)).padStart(3, '0') + '%';
-    if (n < COUNT || loaded < jobs.length) {
-      leaderNum.textContent = Math.max(1, COUNT - n);
-      leaderEl.style.setProperty('--sw', ((el % STEP) / STEP * 360).toFixed(1) + 'deg');
-      requestAnimationFrame(leaderTick);
-    } else { loadPct.textContent = '100%'; leaderEl.style.setProperty('--sw', '360deg'); loaderReady(); }
+  requestAnimationFrame(function loadTick(now) {
+    shownPct += (Math.min(loaded / jobs.length, (now - lt0) / MIN_LOAD) * 100 - shownPct) * .12;
+    const v = String(Math.round(shownPct)).padStart(3, '0');
+    if (loadPct.textContent !== v) loadPct.textContent = v;
+    loadBar.style.transform = `scaleX(${(shownPct / 100).toFixed(4)})`;
+    if (v !== '100') return requestAnimationFrame(loadTick);
+    loader.classList.add('ready'); loadLabel.textContent = 'Press enter';
+    enterBtn.focus({ preventScroll: true });
   });
-  function loaderReady() {
-    if (!wantSound) { loader.classList.add('ready'); return; }
-    // sound is on by default: try it straight away; if the browser blocks autoplay, the enter button starts it
-    bgm.volume = 0;
-    bgm.play().then(() => { userChose = true; setSound(true); reveal(); })
-      .catch(() => { loader.classList.add('ready'); $('#enterSound').focus({ preventScroll: true }); });
+  enterBtn.addEventListener('click', reveal);
+  addEventListener('keydown', e => { if (e.key === 'Enter' && loader.classList.contains('ready') && !revealing) { e.preventDefault(); reveal(); } });
+  function settlePage() {
+    document.body.classList.remove('intro');
+    introBoost = .7;
+    logos.forEach(L => { if (!loader.contains(L.el)) { L.vel += 16; L.flash = 1; } });
   }
-  $('#enterSound').addEventListener('click', () => { userChose = true; setSound(true, true); reveal(); });
-  $('#enterMute').addEventListener('click', () => { userChose = true; setSound(false, true); reveal(); });
   function reveal() {
     if (revealing) return; revealing = true;
+    userChose = true; setSound(true, true);      // entering always turns the music on
     loader.classList.remove('ready');
-    document.body.classList.remove('intro');
-    introBoost = 1.6;
-    logos.forEach(L => { if (!loader.contains(L.el)) { L.vel += 16; L.flash = 1; } });
-    if (reduce) { loader.classList.add('gone'); loaderGone = true; return; }
-    loader.classList.add('dissolving');
-    const t1 = performance.now(), DUR = 1600;
-    requestAnimationFrame(function burn(now) {
-      const k = Math.min(1, (now - t1) / DUR), e = k * k * (3 - 2 * k), c = -1.5 - e * 12;
-      dsvA.setAttribute('values', `0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  14 0 0 0 ${c.toFixed(3)}`);
-      dsvB.setAttribute('values', `0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  14 0 0 0 ${(c + 1.3).toFixed(3)}`);
-      if (k < 1) requestAnimationFrame(burn); else { loader.classList.add('gone'); loaderGone = true; }
+    if (reduce) { loader.classList.add('gone'); loaderGone = true; settlePage(); return; }
+    const IN = 'cubic-bezier(.7,0,.84,0)', OUT = 'cubic-bezier(.16,1,.3,1)', IO = 'cubic-bezier(.77,0,.18,1)';
+    // 1 · camera punches through the logo
+    loaderInner.animate([
+      { transform: 'scale(1)', filter: 'blur(0px)', opacity: 1 },
+      { transform: 'scale(.9)', filter: 'blur(0px)', opacity: 1, offset: .25 },
+      { transform: 'scale(9)', filter: 'blur(18px)', opacity: 0 }
+    ], { duration: 720, easing: IN, fill: 'forwards' });
+    // 2 · shape-layer bars slam in from alternating sides
+    mg.classList.add('on');
+    bars.forEach((b, i) => {
+      b.style.transformOrigin = i % 2 ? 'right' : 'left';
+      b.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 480, delay: 240 + i * 45, easing: IO, fill: 'forwards' });
     });
+    // 3 · screen covered: drop the loader, flash frame, word slams in
+    setTimeout(() => {
+      loader.classList.add('gone'); loaderGone = true;
+      mgFlash.animate([{ opacity: .85 }, { opacity: 0 }], { duration: 240, easing: 'ease-out' });
+      mgWord.animate([
+        { opacity: 0, transform: 'translate(-50%,-50%) scale(1.7)', filter: 'blur(16px)', letterSpacing: '.2em' },
+        { opacity: 1, transform: 'translate(-50%,-50%) scale(1)', filter: 'blur(0px)', letterSpacing: '-.07em', offset: .32 },
+        { opacity: 1, transform: 'translate(-50%,-50%) scale(.97)', filter: 'blur(0px)', letterSpacing: '-.07em', offset: .78 },
+        { opacity: 0, transform: 'translate(-50%,-50%) scale(.55)', filter: 'blur(10px)', letterSpacing: '-.07em' }
+      ], { duration: 980, easing: OUT, fill: 'forwards' });
+      // 4 · bars retract from the centre outwards, revealing the page
+      setTimeout(() => {
+        settlePage();
+        bars.forEach((b, i) => {
+          b.style.transformOrigin = i % 2 ? 'left' : 'right';
+          b.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: 560, delay: Math.abs(i - 3) * 55, easing: IO, fill: 'forwards' });
+        });
+        setTimeout(() => {
+          mg.classList.remove('on');
+          [...bars, mgWord].forEach(el => el.getAnimations().forEach(a => a.cancel()));
+        }, 560 + 3 * 55 + 60);
+      }, 560);
+    }, 240 + 6 * 45 + 480);
   }
 
   /* ---------- Player (lightbox) ----------
