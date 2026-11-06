@@ -1,6 +1,8 @@
-# videos are hosted on a media service (too big for GitHub)
+# full-quality videos are hosted on Cloudinary (too big for GitHub)
 *.mp4
 *.mov
 *.webm
+# ...but the light in-page preview loops ship with the site
+!assets/preview/*.mp4
 .DS_Store
 _shot.html
